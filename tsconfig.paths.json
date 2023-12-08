@@ -1,0 +1,19 @@
+{
+	"compilerOptions": {
+		"baseUrl": "./src",
+		"paths": {
+      "@/*": ["./*"],
+			"@assets/*": ["assets/*"],
+      "@components/*": ["components/*"],
+			"@constants/*": ["constants/*"],
+			"@functions/*": ["functions/*"],
+			"@hooks/*": ["hooks/*"],
+			"@libs/*": ["libs/*"],
+			"@mocks/*": ["mocks/*"],
+			"@pages/*": ["pages/*"],
+			"@query/*": ["query/*"],
+			"@styles/*": ["styles/*"],
+			"@utils/*": ["utils/*"]
+		}
+	}
+}
