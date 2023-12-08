@@ -29,7 +29,7 @@
     "rules": {
         "react-hooks/rules-of-hooks": "error",
 		"react-hooks/exhaustive-deps": "warn",
-        "no-unused-vars": "off",
+        "no-unused-vars": "warn",
         "import/no-extraneous-dependencies": 0,
 		"@typescript-eslint/explicit-function-return-type": "off",
 		"prettier/prettier": ["error", {"endOfLine": "auto"}], 
