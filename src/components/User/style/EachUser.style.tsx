@@ -3,6 +3,10 @@ import styled from 'styled-components';
 export const Container = styled.div`
   display: flex;
   border-bottom: 0.1rem solid black;
+
+  &:hover {
+    cursor: pointer;
+  }
 `;
 
 export const Column = styled.div`

@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import * as EU from './style/EachUser.style';
 
 export interface User {
@@ -15,8 +16,14 @@ interface EachUserProps {
 }
 
 function EachUser({ user }: EachUserProps) {
+  const navigate = useNavigate();
+
+  const goDetail = () => {
+    navigate(`${user.nickname}`);
+  };
+
   return (
-    <EU.Container>
+    <EU.Container onClick={goDetail}>
       <EU.Column>{user.id}</EU.Column>
       <EU.Column>{user.nickname}</EU.Column>
       <EU.Column>{user.name}</EU.Column>

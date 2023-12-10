@@ -25,6 +25,7 @@
     "react-router-dom": "^6.20.1",
     "react-scripts": "5.0.1",
     "react-select": "^5.8.0",
+    "react-use-pagination": "^2.0.1",
     "recoil": "^0.7.7",
     "styled-components": "^6.1.1",
     "styled-reset": "^4.5.1",
@@ -49,6 +50,7 @@
     ]
   },
   "devDependencies": {
+    "@tanstack/react-query-devtools": "^5.13.3",
     "@types/react-auth-kit": "^1.2.1",
     "@types/react-js-pagination": "^3.0.7",
     "@types/react-modal": "^3.16.3",

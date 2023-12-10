@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import request from '@/utils/request';
 
-export default function useGetUser<T>() {
+function useGetUser<T>() {
   const { data, isLoading, error } = useQuery({
     queryKey: ['getUser'],
     queryFn: async () => {
@@ -12,6 +12,7 @@ export default function useGetUser<T>() {
 
       return response?.data;
     },
+    staleTime: 1000000,
   });
 
   return {
@@ -20,3 +21,5 @@ export default function useGetUser<T>() {
     error,
   };
 }
+
+export default useGetUser;

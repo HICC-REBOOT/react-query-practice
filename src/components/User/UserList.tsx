@@ -1,15 +1,19 @@
 import React from 'react';
-import useGetUser from '@/query/get/useGetUser';
+import useServerSidePagination from '@/hooks/useServerSidePagination';
 
 import * as U from './style/UserList.style';
 import EachUser, { type User } from './EachUser';
 
 function UserList() {
-  const { users } = useGetUser<User[]>();
+  const { curPageItem, renderPaginationBtn } = useServerSidePagination<User>({
+    uri: '/api/user/page',
+    size: 5,
+  });
 
   return (
     <U.Container>
-      {users?.map((user) => <EachUser key={user.id} user={user} />)}
+      {curPageItem?.map((user) => <EachUser key={user.id} user={user} />)}
+      {renderPaginationBtn()}
     </U.Container>
   );
 }
