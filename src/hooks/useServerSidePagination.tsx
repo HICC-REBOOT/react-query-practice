@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { usePagination } from 'react-use-pagination';
 import { useQuery, keepPreviousData } from '@tanstack/react-query';
 import request from '@/utils/request';
@@ -65,14 +65,25 @@ function useServerSidePagination<T>({
       setDataLength(response.data.totalElements);
     }
 
-    return response?.data.data;
+    return response?.data;
   };
 
-  const { isLoading, isFetched } = useQuery({
+  const {
+    data: cachingData,
+    isLoading,
+    isFetched,
+  } = useQuery({
     queryKey: ['getPagiable', { uri, size, sort, search, currentPage }],
     queryFn: fetchPagiableData,
     placeholderData: keepPreviousData,
   });
+
+  useEffect(() => {
+    if (cachingData !== undefined) {
+      setData(cachingData.data);
+      setDataLength(cachingData.totalElements);
+    }
+  }, [cachingData]);
 
   const onSetPage = (page: number) => {
     setPage(page - 1);

@@ -12,7 +12,6 @@ function useGetUser<T>() {
 
       return response?.data;
     },
-    staleTime: 1000000,
   });
 
   return {
