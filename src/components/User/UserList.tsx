@@ -1,5 +1,5 @@
 import React from 'react';
-import useServerSidePagination from '@/hooks/useServerSidePagination';
+import useServerSidePagination from '@/query/get/useServerSidePagination';
 
 import * as U from './style/UserList.style';
 import EachUser, { type User } from './EachUser';

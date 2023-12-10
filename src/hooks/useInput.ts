@@ -1,5 +1,12 @@
 import React, { useCallback, useState } from 'react';
 
+/**
+ * useInput
+ * @param {T} init 초기값
+ * @returns useState와 유사하게 만들어놓음
+ *
+ * setValue를 onChange에 넣어도 되고 직접 값을 변경해도 된다.
+ */
 function useInput<T>(init: T) {
   const [value, setValue] = useState<T>(init);
 

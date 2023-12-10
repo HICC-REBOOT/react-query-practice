@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { usePagination } from 'react-use-pagination';
 import { useQuery, keepPreviousData } from '@tanstack/react-query';
+
 import request from '@/utils/request';
 import PaginationComponent from '@/libs/pagination/PaginationComponent';
 
@@ -11,11 +12,13 @@ interface UseServerSidePaginationProps {
   search?: string;
 }
 
+// 예상되는 페이지네이션 형태의 반환형식, 백엔드의 요구에 따라 언제든지 변할 수 있음
 interface ResponseServerSidePagination<T> {
   totalElements: number;
   data: T[];
 }
 
+// pagination에 필요한 파라미터들 (현재 페이지 번호, 페이지 크기, 정렬, 검색)
 interface Pageable {
   page: number;
   size: number;
@@ -24,7 +27,6 @@ interface Pageable {
 }
 
 interface ReturnuseServerSidePagination<T> {
-  isFetched: boolean;
   loading: boolean;
   curPageItem: T[];
   renderPaginationBtn: () => React.JSX.Element;
@@ -36,8 +38,8 @@ function useServerSidePagination<T>({
   sort,
   search,
 }: UseServerSidePaginationProps): ReturnuseServerSidePagination<T> {
-  const [data, setData] = useState<T[]>([]);
-  const [dataLength, setDataLength] = useState<number>(0);
+  const [data, setData] = useState<T[]>([]); // 페이지의 데이터
+  const [dataLength, setDataLength] = useState<number>(0); // 데이터의 전체 길이
 
   const { currentPage, setPage } = usePagination({
     totalItems: dataLength,
@@ -68,11 +70,7 @@ function useServerSidePagination<T>({
     return response?.data;
   };
 
-  const {
-    data: cachingData,
-    isLoading,
-    isFetched,
-  } = useQuery({
+  const { data: cachingData, isLoading } = useQuery({
     queryKey: ['getPagiable', { uri, size, sort, search, currentPage }],
     queryFn: fetchPagiableData,
     placeholderData: keepPreviousData,
@@ -102,7 +100,6 @@ function useServerSidePagination<T>({
   };
 
   return {
-    isFetched,
     loading: isLoading,
     curPageItem: data,
     renderPaginationBtn,

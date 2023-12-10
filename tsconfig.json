@@ -23,6 +23,6 @@
   },
   "include": [
     "src",
-    "craco.config.js"
-, "src/pages/userDetail/style/.style.tsx"  ]
+    "craco.config.ts"
+  ]
 }

@@ -6,7 +6,7 @@
 + tabWidth: 들여쓰기 길이를 2로 설정
 + singleQuote: 문자열을 큰 따옴표로 표시
 + trailingComma: 객체나 배열의 마지막 요소에 항상 쉼표
-+ semi: 문장 끝에 세미콜론 사용하지 않음
++ semi: 문장 끝에 세미콜론을 항상 사용함
 + arrowParens: 화살표 함수에서 모든 인자는 괄호가 포함된다.
 
 ## src 폴더구조 설명
@@ -33,7 +33,9 @@
     REACT_APP_SERVER="http://localhost:8080"
     ```
 + .eslintrc: 코드 오류를 잡아주는 역할을 수행
++ .gitignore: 깃에 올리지 않을 파일, 디렉토리를 선언해주는 곳
 + .prettierrc: 코드 스타일, 컨벤션을 잡아주는 역할 수행, 내용에 대한 설명은 prettier 설정 참고
++ craco.config.ts: 절대 경로 설정을 하기 위해서 cra에 config 설정을 덮어쓴 패키지
 + package.json: react에서 사용하는 라이브러리를 모아두는 곳
   - 처음에 프로젝트를 클론한 후 터미널에 cd frontend를 입력한 후 npm i를 입력하면 package.json에 있는 라이브러리를 자동으로 설치
 + tsconfig.json: 타입스크립트를 자바스크립트로 변환 시키는 컴파일 설정을 한꺼번에 정의 해놓는 파일
@@ -41,9 +43,10 @@
 
 
 ## mocks server worker
-  - mocks 관련해서는 나중에 추가할 예정, 추가한다면 아래처럼 적용할테니 참고만..
++ react-query를 테스트해보기 위해서 사용했는데 실제로 개발시에 사용할지는 아직 모릅니다. 백엔드 개발속도가 빠르면 필요없어요!
 
 + 가짜 서버를 만들어 백엔드가 없어도 백엔드 연결 테스트를 해볼 수 있다.
+
 + client에서 axios 요청을 보내면 msw가 이를 가로채 미리 작성해둔 응답을 보내준다
 
 ### msw 폴더 구조
@@ -54,19 +57,69 @@
 // get, post, patch, delete 등 http method를 정한다.
 // http://localhost:8080은 BASE_URL로 대체한다.
 // endpoint 별로 작성할 수 있으며, BASE_URL뒤에 /로 시작하면 된다. 요청을 보낼때도 마찬가지
-// async (req, res, ctx)
-// req: request
-// res: response
-// ctx: context
 
-// 응답의 결과를 response 변수에 넣어 return await res(ctx.json(response)) 형식으로 돌려주면 된다.
+// 응답의 결과를 response 변수에 넣어 HttpResponse.json(response)형태로 돌려주면 된다.
 // 각 핸들러들은 배열로 저장한다
 
-// req의 url 파라미터, body도 여기서 받을 수 있으며, 그 내용은 구글에 검색하면 친절하게 나옵니다.
-rest.get(`${BASE_URL}/hello`, async (req, res, ctx) => {
-    const response = "hello"
-    return await res(ctx.json(response))
+// http 안에는 get, post, put, delete, patch의 http method가 존재
+// 아래와 같이 요청을 날리면 된다.
+
+http.get(`${BASE_URL}/api/user`, () => {
+    const response = setResponse(user);
+    return HttpResponse.json(response);
   }),
+
+// 예시 하나 더 pagination일 때
+http.get(`${BASE_URL}/api/user/page`, async ({ request }) => {
+    const queryParams = new URLSearchParams(new URL(request.url).search);
+
+    const page = Number(queryParams.get('page'));
+    const size = Number(queryParams.get('size'));
+
+    const pageItem = () => {
+      return user.slice(page * size, (page + 1) * size);
+    };
+
+    const response = setResponse({
+      totalElements: user.length,
+      data: pageItem(),
+    });
+
+    // 요청을 1초 지연시키는 기법
+    await new Promise((resolve) => {
+      setTimeout(resolve, 1000);
+    });
+
+    return HttpResponse.json(response);
+  }),
+```
+
++ setResponse  
+예상되는 응답의 형태
+이는 백엔드의 응답 형태가 달라지면 달라지게 하면 된다.
+
+```ts
+interface IResponse<R> {
+  timestamp: string;
+  isSuccess: boolean;
+  code: string;
+  message: string;
+  data: R;
+}
+
+const setResponse = <R>(data: R) => {
+  const response: IResponse<R> = {
+    timestamp: '2023-12-08',
+    isSuccess: true,
+    code: '200',
+    message: '호출 성공',
+    data,
+  };
+
+  return response;
+};
+
+export default setResponse;
 ```
 
 + 추가로 작성한 handler를 handler.js에서 스프레드 연산자로 추가해주면 된다.
@@ -138,6 +191,66 @@ const fetchData = async () => {
 ```
 
 이와 같이 요청을 보내면 됩니다.
+
+## react-query
+
++ 이번 프로젝트에서는 단순 axios를 사용한 통신이 아니라 react-query를 부가적으로 사용합니다.
++ 그 이유는 isLoading, error 등등 여러 가지 편의성 기능의 제공도 있지만 가장 큰 이유는 캐싱 기능
++ 같은 정보를 여러 번 불러와 서버를 부하시키는 일을 벌리지 않기 위해서이며, 이 때문에 react-query를 활용한다고 알고 있으면 되겠습니다.
+
+
+### 초기 셋팅
+
+```tsx
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+      staleTime: 60 * 1000,
+    },
+  },
+});
+
+<QueryClientProvider client={queryClient}>
+  <App />
+  <ReactQueryDevtools initialIsOpen={true} />
+</QueryClientProvider>
+```
+
++ queryClient를 생성한 후 디폴트 옵션으로 두 가지를 설정해줬는데 focus를 할 경우 (크롬 창 왔다갔다, f12 등) refetch 방지와 staleTime 두 가지이다. 추가적으로 필요한 것이 있다면 차후에 넣을 예정입니다.
+
+staleTime은 캐싱한 데이터가 유효한 시간을 말하는데, 캐싱한 데이터가 staleTime이 지나지 않았다면, fresh한 상태인 캐싱데이터이므로 굳이 서버로부터 데이터를 다시 가져오지 않아도 된다는 의미입니다.
+
+
++ react-query 사용법
+
+**@query/get/useGetUser.ts**를 참고하면 더 빠름
+
+http method에서 get은 `useQuery`훅을 사용한다.
+useQuery 훅은 기본적으로 2개의 파라미터를 필요로합니다.
+
+1. queryKey
+  + 리코일과 동일하게 중복되지 않은 고유한 키 값을 넣어줘야합니다.
+  + 여기에는 파리미터의 변동 또한 반영시켜 주어야하는데 queryKey의 type은 `string[]`임을 확인할 수 있습니다.
+  + 따라서 변동되는 조건들을 배열로 넣어주면 **@query/get/useGetUserDetail.ts 참고** 각 파라미터 별로 고유한 키를 만들 수 있게 됩니다.
+
+2. queryFn
+  + 실행할 비동기함수
+  + 말 그대로 서버에서 값을 가져오는 함수입니다.
+  + 여기에서 utils에 있는 request 함수를 사용하면 됩니다.
+
+3. 부가적으로...
+  + select가 있는데 이는 서버에서 가져온 값을 잘라서 쓴다거나, 정렬을 한다거나하는 데이터를 가공하는 목적으로 사용할 수 있습니다.
+  + 이거는 필요할 때 적절하게 사용하면 좋을 것 같습니다.
+
+
+http method에서 get 이외의 서버의 값을 변동시킬 수 있는 method는 `useMutate` 훅을 사용하는데
+이는 차후에 보충해서 넣을 예정입니다.
+
+
+## react-query 함수 저장
+
+@query 디렉토리 안에 각 http method별 디렉토리 안에 모아서 사용하시면 됩니다.
 
 
 ## import 할 때
