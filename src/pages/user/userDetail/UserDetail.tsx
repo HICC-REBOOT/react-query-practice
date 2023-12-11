@@ -14,6 +14,10 @@ function UserDetail() {
     navigate('/user');
   };
 
+  const goEdit = () => {
+    navigate(`/user/${nickname}/edit`, { state: user });
+  };
+
   return (
     <D.Container>
       {user !== undefined && (
@@ -27,6 +31,7 @@ function UserDetail() {
         </>
       )}
 
+      <button onClick={goEdit}>수정</button>
       <button onClick={goList}>목록으로</button>
     </D.Container>
   );

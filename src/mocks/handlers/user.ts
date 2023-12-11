@@ -42,6 +42,12 @@ const userHandler = [
 
     return HttpResponse.json(response);
   }),
+
+  // 수정
+  http.patch(`${BASE_URL}/api/user`, async () => {
+    const response = setResponse({ nickname: `유저 수정 성공` });
+    return HttpResponse.json(response);
+  }),
 ];
 
 export default userHandler;
