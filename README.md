@@ -222,11 +222,13 @@ const queryClient = new QueryClient({
 staleTime은 캐싱한 데이터가 유효한 시간을 말하는데, 캐싱한 데이터가 staleTime이 지나지 않았다면, fresh한 상태인 캐싱데이터이므로 굳이 서버로부터 데이터를 다시 가져오지 않아도 된다는 의미입니다.
 
 
-+ react-query 사용법
+## react-query 사용법
+
+### get
 
 **@query/get/useGetUser.ts**를 참고하면 더 빠름
 
-http method에서 get은 `useQuery`훅을 사용한다.
+http method에서 get은 `useQuery`훅을 사용합니다.
 useQuery 훅은 기본적으로 2개의 파라미터를 필요로합니다.
 
 1. queryKey
@@ -244,8 +246,28 @@ useQuery 훅은 기본적으로 2개의 파라미터를 필요로합니다.
   + 이거는 필요할 때 적절하게 사용하면 좋을 것 같습니다.
 
 
-http method에서 get 이외의 서버의 값을 변동시킬 수 있는 method는 `useMutate` 훅을 사용하는데
-이는 차후에 보충해서 넣을 예정입니다.
+### post, put, delete, patch
+
+http method에서 get 이외의 메서드는 `useMutation`훅을 사용합니다.
+useMutation 훅은 기본적으로 2개의 파라미터를 필요로하며, 추가로 몇 가지를 더 알아야합니다.
+
+
+1. mutationKey
+  + useQuery의 키와 동일합니다.
+
+2. mutationFn
+  + 실행할 비동기함수
+  + 말 그대로 서버에 값을 전달하여 서버의 데이터에 변동을 일으키는 함수입니다.
+  + 여기에서 utils에 있는 request 함수를 사용하면 됩니다.
+
+3. onSuccess
+  + 요청이 성공했을 때 작동하는 함수
+  + 예시에서는 patch 메서드를 사용했으며, 수정이 성공하면 수정된 데이터로 서버에서 다시 불러와야합니다.
+  + 이 때 queryClient의 refetchQueries를 사용하면 해당 key에 대한 query를 fetch해올 수 있습니다.
+
+4. onError
+  + 요청이 실패했을 때 작동하는 함수
+  + 요청이 실패했을 때 상태를 원복시키는 작업을 수행할 수 있습니다.
 
 
 ## react-query 함수 저장
