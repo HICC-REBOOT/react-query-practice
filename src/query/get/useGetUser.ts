@@ -10,7 +10,7 @@ function useGetUser<T>() {
         method: 'get',
       });
 
-      return response?.data;
+      return response.data;
     },
   });
 

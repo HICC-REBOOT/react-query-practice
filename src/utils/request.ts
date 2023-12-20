@@ -1,4 +1,4 @@
-import axios, { AxiosRequestConfig, AxiosResponse, AxiosError } from 'axios';
+import { AxiosRequestConfig, AxiosResponse } from 'axios';
 import axiosInstance from './axios';
 
 interface IRequest<T, P> {
@@ -15,15 +15,6 @@ interface IResponse<R> {
   code: string;
   message: string;
   data: R;
-}
-
-// error 형태, 이는 백엔드의 상황을 보고 변경
-export interface IError {
-  timestamp: string;
-  isSuccess: boolean;
-  code: string;
-  message: string;
-  httpStatus: number;
 }
 
 /**
@@ -46,22 +37,8 @@ async function request<T, R, P>({ uri, method, data, params }: IRequest<T, P>) {
     params,
   };
 
-  try {
-    const response = await axiosInstance<T, AxiosResponse<IResponse<R>>>(
-      config,
-    );
-    return response.data;
-  } catch (error) {
-    if (axios.isAxiosError(error)) {
-      const serverError = error as AxiosError<IError>;
-      if (serverError && serverError.response) {
-        // eslint-disable-next-line no-alert
-        alert(serverError.response.data.message);
-      }
-    }
-
-    return undefined;
-  }
+  const response = await axiosInstance<T, AxiosResponse<IResponse<R>>>(config);
+  return response.data;
 }
 
 export default request;

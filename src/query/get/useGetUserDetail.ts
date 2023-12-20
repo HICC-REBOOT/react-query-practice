@@ -18,7 +18,7 @@ function useGetUserDetail({ nickname }: userDetailParams) {
         },
       });
 
-      return response?.data;
+      return response.data;
     },
   });
 

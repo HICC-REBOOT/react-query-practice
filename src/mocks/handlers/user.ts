@@ -4,7 +4,7 @@ import user from '../data/user.json';
 import setResponse from '../response';
 
 const userHandler = [
-  http.get(`${BASE_URL}/api/user`, () => {
+  http.get(`${BASE_URL}/api/user`, async () => {
     const response = setResponse(user);
     return HttpResponse.json(response);
   }),

@@ -159,11 +159,6 @@ const fetchData = async () => {
     }
   });
 
-  if (response === undefined) {
-      console.log('error');
-      return;
-    }
-
   return response.data.id;
 }
 
@@ -180,11 +175,6 @@ const fetchData = async () => {
       size,
     }
   });
-
-  if (response === undefined) {
-      console.log('error');
-      return;
-    }
 
   return response.data.id;
 }

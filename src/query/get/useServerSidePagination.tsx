@@ -62,12 +62,10 @@ function useServerSidePagination<T>({
       },
     });
 
-    if (response !== undefined) {
-      setData(response.data.data);
-      setDataLength(response.data.totalElements);
-    }
+    setData(response.data.data);
+    setDataLength(response.data.totalElements);
 
-    return response?.data;
+    return response.data;
   };
 
   const { data: cachingData, isLoading } = useQuery({

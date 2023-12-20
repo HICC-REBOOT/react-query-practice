@@ -37,7 +37,7 @@ function usePatchUserInfo({
         method: 'patch',
         data: user,
       });
-      return response?.data.nickname;
+      return response.data.nickname;
     },
     onSuccess: () => {
       // 성공하면 다시 서버에서 유저 상세 조회를 한다. 변경된 값이 조회될 것
