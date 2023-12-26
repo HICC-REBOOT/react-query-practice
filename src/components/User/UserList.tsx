@@ -12,7 +12,9 @@ function UserList() {
 
   return (
     <U.Container>
-      {curPageItem?.map((user) => <EachUser key={user.id} user={user} />)}
+      {curPageItem.map((user) => (
+        <EachUser key={user.id} user={user} />
+      ))}
       {renderPaginationBtn()}
     </U.Container>
   );

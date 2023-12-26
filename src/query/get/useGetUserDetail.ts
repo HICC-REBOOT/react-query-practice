@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query';
+import { useSuspenseQuery } from '@tanstack/react-query';
 import { User } from '@/components/User/EachUser';
 import request from '@/utils/request';
 
@@ -7,7 +7,7 @@ interface userDetailParams {
 }
 
 function useGetUserDetail({ nickname }: userDetailParams) {
-  const { data, isLoading, error } = useQuery({
+  const { data, isLoading, error } = useSuspenseQuery({
     queryKey: ['getUserDetail', nickname],
     queryFn: async () => {
       const response = await request<null, User, userDetailParams>({

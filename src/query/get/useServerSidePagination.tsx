@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { usePagination } from 'react-use-pagination';
-import { useQuery, keepPreviousData } from '@tanstack/react-query';
+import { useSuspenseQuery } from '@tanstack/react-query';
 
 import request from '@/utils/request';
 import PaginationComponent from '@/libs/pagination/PaginationComponent';
@@ -27,7 +27,6 @@ interface Pageable {
 }
 
 interface ReturnuseServerSidePagination<T> {
-  loading: boolean;
   curPageItem: T[];
   renderPaginationBtn: () => React.JSX.Element;
 }
@@ -68,10 +67,9 @@ function useServerSidePagination<T>({
     return response.data;
   };
 
-  const { data: cachingData, isLoading } = useQuery({
+  const { data: cachingData } = useSuspenseQuery({
     queryKey: ['getPagiable', { uri, size, sort, search, currentPage }],
     queryFn: fetchPagiableData,
-    placeholderData: keepPreviousData,
   });
 
   useEffect(() => {
@@ -98,7 +96,6 @@ function useServerSidePagination<T>({
   };
 
   return {
-    loading: isLoading,
     curPageItem: data,
     renderPaginationBtn,
   };
