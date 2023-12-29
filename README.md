@@ -235,6 +235,23 @@ useQuery 훅은 기본적으로 2개의 파라미터를 필요로합니다.
   + select가 있는데 이는 서버에서 가져온 값을 잘라서 쓴다거나, 정렬을 한다거나하는 데이터를 가공하는 목적으로 사용할 수 있습니다.
   + 이거는 필요할 때 적절하게 사용하면 좋을 것 같습니다.
 
+### useSuspenseQuery
+
++ 성공한 결과만을 전달해줘서 반환이 undefined일 때를 생각하지 않아도 된다는 장점이 있습니다.
++ 이 훅을 사용하려면 Promise가 발생하는 부모의 컴포넌트에서 Suspense로 묶어줘야합니다.
++ 아마 useQuery보다 useSuspenseQuery를 더 많이 사용하게 되지 않을까...
+
+Suspense는 자식 컴포넌트에서 프로미스를 감지하여 loading 상태일 동안 fallback props로 넘겨준 loading 화면을 보여준 뒤 완료되면 자식 컴포넌트의 결과를 보여줍니다.
+
+isLoading을 사용할 필요가 없다는 장점이 있습니다.
+error일 때는 ErrorBoundary라는 것이 있는데 이는 추후에 공부해보고 추가할게요.
+
+```tsx
+<Suspense fallback={<BoxSkeleton pageSize={pageSize} />}>
+  <ProjectListInner projectApi={projectApi} pageSize={pageSize} />
+</Suspense>
+```
+
 
 ### post, put, delete, patch
 
