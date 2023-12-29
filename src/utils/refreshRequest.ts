@@ -1,5 +1,5 @@
-import { AxiosRequestConfig, AxiosResponse } from 'axios';
-import axiosInstance from './axios';
+import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
+import BASE_URL from '@/config';
 
 interface IRequest<T, P> {
   uri: string;
@@ -17,8 +17,12 @@ interface IResponse<R> {
   data: R;
 }
 
+const refreshInstance = axios.create({
+  baseURL: BASE_URL,
+});
+
 /**
- * request
+ * refreshRequest (리프레시 요청 외 사용금지)
  * @template T - request body type
  * @template R - response body type
  * @template P - request parameter type
@@ -29,7 +33,12 @@ interface IResponse<R> {
  * @param {P} params - request parameter
  */
 
-async function request<T, R, P>({ uri, method, data, params }: IRequest<T, P>) {
+async function refreshRequest<T, R, P>({
+  uri,
+  method,
+  data,
+  params,
+}: IRequest<T, P>) {
   const config: AxiosRequestConfig = {
     url: uri,
     method,
@@ -37,8 +46,10 @@ async function request<T, R, P>({ uri, method, data, params }: IRequest<T, P>) {
     params,
   };
 
-  const response = await axiosInstance<T, AxiosResponse<IResponse<R>>>(config);
+  const response = await refreshInstance<T, AxiosResponse<IResponse<R>>>(
+    config,
+  );
   return response.data;
 }
 
-export default request;
+export default refreshRequest;
