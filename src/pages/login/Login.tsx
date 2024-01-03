@@ -1,16 +1,16 @@
 import React from 'react';
-import { useSetRecoilState } from 'recoil';
+import { useNavigate } from 'react-router-dom';
 import login from '@/auth/login';
-import tokenStorage from '@/auth/token';
 
 function Login() {
-  const setAccess = useSetRecoilState(tokenStorage);
+  const navigate = useNavigate();
 
   const requestLogin = async () => {
     const data = { id: 'B731070', password: 'hicc' };
     const access = await login(data);
-    setAccess(access);
+    localStorage.setItem('access', access);
     alert('로그인이 완료되었습니다.');
+    navigate('/user');
   };
 
   return (

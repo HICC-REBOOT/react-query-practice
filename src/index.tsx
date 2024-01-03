@@ -32,16 +32,16 @@ root.render(
   <React.StrictMode>
     <ThemeProvider theme={theme}>
       <GlobalStyle />
-      <BrowserRouter>
-        <CookiesProvider defaultSetOptions={{ path: '/' }}>
+      <CookiesProvider defaultSetOptions={{ path: '/' }}>
+        <BrowserRouter>
           <RecoilRoot>
             <QueryClientProvider client={queryClient}>
               <App />
               <ReactQueryDevtools initialIsOpen={true} />
             </QueryClientProvider>
           </RecoilRoot>
-        </CookiesProvider>
-      </BrowserRouter>
+        </BrowserRouter>
+      </CookiesProvider>
     </ThemeProvider>
   </React.StrictMode>,
 );

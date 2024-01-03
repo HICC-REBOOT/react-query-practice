@@ -1,7 +1,5 @@
 import axios, { AxiosError } from 'axios';
-import { useRecoilValue, useResetRecoilState } from 'recoil';
 import BASE_URL from '@/config';
-import tokenStorage from '@/auth/token';
 import reissue from './reissue';
 import { removeCookie } from './cookie';
 
@@ -23,7 +21,7 @@ axiosInstance.interceptors.request.use(async (config) => {
     return config;
   }
 
-  const token = useRecoilValue(tokenStorage);
+  const token = localStorage.getItem('access');
 
   if (token !== null) {
     config.headers.Authorization = `Bearer ${token}`;
@@ -44,7 +42,6 @@ axiosInstance.interceptors.response.use(
   async (error) => {
     const { config } = error;
     const axiosError = getAxiosError(error as AxiosError);
-    const removeAccess = useResetRecoilState(tokenStorage);
 
     if (axiosError?.code === 'non_login') {
       alert('로그인이 필요한 서비스입니다.');
@@ -60,13 +57,10 @@ axiosInstance.interceptors.response.use(
     }
 
     if (axiosError?.code === 'refresh_expired') {
-      removeAccess();
       removeCookie('refresh');
-      alert(axiosError?.message);
       return Promise.reject(error);
     }
 
-    alert(axiosError?.message);
     return Promise.reject(error);
   },
 );

@@ -20,7 +20,7 @@ async function login(data: LoginData) {
 
   setCookie('refresh', response.data.refreshToken, {
     path: '/',
-    httpOnly: true,
+    httpOnly: false,
   });
 
   return response.data.accessToken;
