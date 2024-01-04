@@ -1,8 +1,8 @@
 import React, { Suspense } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
-import Loading from '@/components/loading/Loading';
-import UserList from '@/components/User/UserList';
-import GlobalError from '@/components/error/GlobalError';
+import Loading from '@components/loading/Loading';
+import UserList from '@components/User/UserList';
+import GlobalError from '@components/error/GlobalError';
 
 function UserPage() {
   return (

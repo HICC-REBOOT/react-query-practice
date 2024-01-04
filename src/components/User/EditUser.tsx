@@ -1,7 +1,7 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { useLocation } from 'react-router-dom';
-import usePatchUserInfo from '@/query/patch/usePatchUserInfo';
+import usePatchUserInfo from '@query/patch/usePatchUserInfo';
 import { type User } from './EachUser';
 
 import * as U from './style/EditUser.style';

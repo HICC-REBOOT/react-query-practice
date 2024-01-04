@@ -1,6 +1,6 @@
 import { useSuspenseQuery } from '@tanstack/react-query';
-import { User } from '@/components/User/EachUser';
-import request from '@/utils/request';
+import { User } from '@components/User/EachUser';
+import request from '@utils/request';
 
 interface userDetailParams {
   nickname: string;

@@ -1,5 +1,5 @@
 import { http, HttpResponse } from 'msw';
-import BASE_URL from '@/config';
+import BASE_URL from '../../config';
 import setResponse from '../response';
 
 interface LoginResponse {
@@ -16,6 +16,15 @@ const authHandler = [
 
     await new Promise((resolve) => {
       setTimeout(resolve, 1000);
+    });
+
+    return HttpResponse.json(response);
+  }),
+
+  http.post(`${BASE_URL}/api/auth/refresh/`, async () => {
+    const response = setResponse<LoginResponse>({
+      accessToken: 'newAccess',
+      refreshToken: 'refresh',
     });
 
     return HttpResponse.json(response);

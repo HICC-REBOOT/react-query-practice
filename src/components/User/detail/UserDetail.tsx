@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import useGetUserDetail from '@/query/get/useGetUserDetail';
+import useGetUserDetail from '@query/get/useGetUserDetail';
 
 import * as D from './UserDetail.style';
 

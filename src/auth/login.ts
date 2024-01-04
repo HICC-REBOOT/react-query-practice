@@ -1,5 +1,5 @@
-import { setCookie } from '@/utils/cookie';
-import request from '@/utils/request';
+import { setCookie } from '@utils/cookie';
+import request from '@utils/request';
 
 interface LoginData {
   id: string;

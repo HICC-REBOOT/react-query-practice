@@ -3,9 +3,9 @@ import { Route, Routes } from 'react-router-dom';
 import Layout from '@components/layout/Layout';
 import Main from '@pages/Main';
 import EditUser from '@components/User/EditUser';
-import UserDetailPage from './pages/user/UserDetail';
-import UserPage from './pages/user/User';
-import Login from './pages/login/Login';
+import UserDetailPage from '@pages/user/UserDetail';
+import UserPage from '@pages/user/User';
+import Login from '@pages/login/Login';
 
 function App() {
   return (

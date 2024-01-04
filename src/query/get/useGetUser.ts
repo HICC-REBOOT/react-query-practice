@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import request from '@/utils/request';
+import request from '@utils/request';
 
 function useGetUser<T>() {
   const { data, isLoading, error } = useQuery({

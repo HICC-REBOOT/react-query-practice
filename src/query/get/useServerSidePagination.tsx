@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { usePagination } from 'react-use-pagination';
 import { useSuspenseQuery } from '@tanstack/react-query';
 
-import request from '@/utils/request';
-import PaginationComponent from '@/libs/pagination/PaginationComponent';
+import request from '@utils/request';
+import PaginationComponent from '@libs/pagination/PaginationComponent';
 
 interface UseServerSidePaginationProps {
   uri: string;
@@ -37,13 +36,8 @@ function useServerSidePagination<T>({
   sort,
   search,
 }: UseServerSidePaginationProps): ReturnuseServerSidePagination<T> {
-  const [data, setData] = useState<T[]>([]); // 페이지의 데이터
   const [dataLength, setDataLength] = useState<number>(0); // 데이터의 전체 길이
-
-  const { currentPage, setPage } = usePagination({
-    totalItems: dataLength,
-    initialPageSize: size,
-  });
+  const [page, setPage] = useState<number>(0); // 현재 페이지
 
   const fetchPagiableData = async () => {
     const response = await request<
@@ -54,39 +48,33 @@ function useServerSidePagination<T>({
       uri,
       method: 'get',
       params: {
-        page: currentPage,
+        page,
         size,
         sort,
         search,
       },
     });
 
-    setData(response.data.data);
-    setDataLength(response.data.totalElements);
-
     return response.data;
   };
 
   const { data: cachingData } = useSuspenseQuery({
-    queryKey: ['getPagiable', { uri, size, sort, search, currentPage }],
+    queryKey: ['getPagiable', { uri, size, sort, search, page }],
     queryFn: fetchPagiableData,
   });
 
   useEffect(() => {
-    if (cachingData !== undefined) {
-      setData(cachingData.data);
-      setDataLength(cachingData.totalElements);
-    }
+    setDataLength(cachingData.totalElements);
   }, [cachingData]);
 
-  const onSetPage = (page: number) => {
-    setPage(page - 1);
+  const onSetPage = (pageNum: number) => {
+    setPage(pageNum - 1);
   };
 
   const renderPaginationBtn = (): React.JSX.Element => {
     return (
       <PaginationComponent
-        page={currentPage + 1}
+        page={page + 1}
         size={size}
         count={dataLength}
         pageRange={5}
@@ -96,7 +84,7 @@ function useServerSidePagination<T>({
   };
 
   return {
-    curPageItem: data,
+    curPageItem: cachingData.data,
     renderPaginationBtn,
   };
 }

@@ -1,5 +1,5 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
-import BASE_URL from '@/config';
+import BASE_URL from '../config';
 
 interface IRequest<T, P> {
   uri: string;

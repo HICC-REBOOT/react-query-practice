@@ -1,5 +1,5 @@
 import axios, { AxiosError } from 'axios';
-import BASE_URL from '@/config';
+import BASE_URL from '../config';
 import reissue from './reissue';
 import { removeCookie } from './cookie';
 
@@ -42,6 +42,7 @@ axiosInstance.interceptors.response.use(
   async (error) => {
     const { config } = error;
     const axiosError = getAxiosError(error as AxiosError);
+    console.log(axiosError);
 
     if (axiosError?.code === 'non_login') {
       alert('로그인이 필요한 서비스입니다.');

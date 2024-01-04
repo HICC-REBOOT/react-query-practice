@@ -3,8 +3,8 @@ import {
   useMutation,
   useQueryClient,
 } from '@tanstack/react-query';
-import request from '@/utils/request';
-import { User } from '@/components/User/EachUser';
+import request from '@utils/request';
+import { User } from '@components/User/EachUser';
 
 interface usePatchUserInfoProps {
   nickname: string;

@@ -1,7 +1,8 @@
 import { http, HttpResponse } from 'msw';
-import BASE_URL from '@/config';
+import BASE_URL from '../../config';
 import user from '../data/user.json';
 import setResponse from '../response';
+import setErrorResponse from '../errorResponse';
 
 const userHandler = [
   http.get(`${BASE_URL}/api/user`, async () => {
@@ -44,9 +45,9 @@ const userHandler = [
   }),
 
   // 수정
-  http.patch(`${BASE_URL}/api/user`, async () => {
-    const response = setResponse({ nickname: `유저 수정 성공` });
-    return HttpResponse.json(response);
+  http.patch(`${BASE_URL}/api/user`, async ({ request }) => {
+    const response = setErrorResponse({ nickname: `유저 수정 성공` });
+    return HttpResponse.json(response, { status: 401 });
   }),
 ];
 
